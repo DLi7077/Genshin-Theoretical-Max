@@ -7,7 +7,7 @@ class Character{
     private:
         std::string name="untitled Character";
         double BaseAtk, TotalAtk, DEF=0, ElementalMastery=0,
-        CritRate=.05,CritDMG=.5,EnergyRecharge=1,DMGBonus=0;
+        CritRate=0.05,CritDMG=0.50,EnergyRecharge=1.00,DMGBonus=0;
         double AtkPercent=0;
         double FlatAttack=0;
 
@@ -74,6 +74,31 @@ class Character{
         void setBurst(double b){
             BurstScaling=b;
         }
+
+        double getBaseAtk() const{
+            return BaseAtk;
+        }
+        double getTotalAtk() const{
+            return TotalAtk;
+        }
+        double getEM() const {
+            return ElementalMastery;
+        }
+        double getER() const{
+            return EnergyRecharge;
+        }
+        double getCritRate() const{
+            return CritDMG;
+        }
+        double getCritDmg() const{
+            return CritDMG;
+        }
+        double getDMGBonus() const{
+            return DMGBonus;
+        }
+
+
+
         void displayCharacterDetails(){
             using namespace std;
             cout<<name<<"\n"
