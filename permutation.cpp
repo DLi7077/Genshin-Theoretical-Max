@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
+#include "vectorFunctions.cpp"
 /**
  * @brief given a list of integers, return a list of lists that contains all possible permutations of that list
  * 
@@ -25,7 +26,6 @@ void removeDuplicatePermutations(std::vector<std::vector<double>> &list){
 
     //sort the list
     std::sort(list.begin(),list.end());
-
     //all vectors now sorted, remove dups
     for(int i=1;i<list.size();i++){
         if(list[i]==list[i-1]){
@@ -139,9 +139,9 @@ void singleDistribution(int rollsToAdd, int rollsLeft, int idx, std::vector<doub
     }
 }
 
-std::vector<std::vector<double>> generateDistributions(int substat, int rolls){
+std::vector<std::vector<double>> generateDistributions(int substat, int rolls,int startingVal=1){
     distributions.clear();
-    std::vector<double> base(substat,1);
+    std::vector<double> base(substat,startingVal);
     for(int i=2;i<=rolls;i++){
         singleDistribution(i,rolls,0,base);
     }
@@ -157,7 +157,7 @@ std::vector<std::vector<double>> generateDistributions(int substat, int rolls){
  * @param Editindex tells us the index to place the EditValue for every sub vector
  * @return std::vector<std::vector<double>> totalPossibilities
  */
-std::vector<std::vector<double>> getPossibilities(std::vector<std::vector<double>> distribution,std::vector<double> substats,int EditIndex, double EditValue){
+std::vector<std::vector<double>> getPossibilities(std::vector<std::vector<double>> distribution,std::vector<double> substats,int EditIndex=-1, double EditValue=-1){
     std::vector<std::vector<double>> TotalPossibilities;
     for(int i=0;i<distributions.size();i++){//for every base distribution
         std::vector<std::vector<double>> list=UniquePermutations(distributions[i]);//create permutations
@@ -190,14 +190,18 @@ std::vector<std::vector<double>> getPossibilities(std::vector<std::vector<double
  * @return std::vector<std::vector<double>> 
  */
 std::vector<std::vector<double>> MergePossibilities(std::vector<std::vector<double>> part1, std::vector<std::vector<double>>part2){
+    std::map<std::vector<double>,int> dups;//use hashmap to catch duplicates
     std::vector<std::vector<double>> merge;
     for(int t=0;t<part2.size();t++){
-        std::vector<std::vector<double>> hold(part1.begin(),part1.end());//reset point
-        for(int i=0;i<part1.size();i++){//for every list in part1 aka (part1[i])
-            for(int p=0;p<part1[i].size();p++){
-                hold[i][p]+=part2[i][p];
+        std::vector<std::vector<double>> hold(part1.begin(),part1.end());
+        for(int i=0;i<part1.size();i++){//for every list in part1 (part1[i] is an unique artifact disrtibution)
+            for(int s=0;s<hold[i].size();s++){//traverse thru the substat values
+                hold[i][s]+=part2[t][s];//part2 is smaller, out of bounds error. use t
             }
-            merge.push_back(hold[i]);//return that distribution
+            if(dups[hold[i]]==0){
+                merge.push_back(hold[i]);//add to merge
+            }
+            dups[hold[i]]++;
         }
     }
     return merge;
