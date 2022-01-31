@@ -49,8 +49,8 @@ class Character{
         void setTotalAttack(double total){
             TotalAtk=total;
         }
-        void setAtkPercent(double p){
-            AtkPercent=p;
+        void setAtkPercent(double p){//p is taken as x percent
+            AtkPercent=p*0.01;
             updateAtk();
         }
         void setEM(double e){
@@ -96,6 +96,9 @@ class Character{
         double getDMGBonus() const{
             return DMGBonus;
         }
+        double getAtkPercent() const{
+            return AtkPercent;
+        }
 
 
 
@@ -116,3 +119,6 @@ class Character{
 };
 
 #endif
+/* to do: set output format:
+BaseAtk, TotalAtk, EM, ER, Crit Rate, Crit Dmg, DmgBonus, SkillDmg, BurstDmg
+*/
