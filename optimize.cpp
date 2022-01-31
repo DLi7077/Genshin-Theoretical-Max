@@ -88,11 +88,12 @@ int main(){
     std::ofstream outfile;
     outfile.open("distributions.csv");
     Character BaseStats= Character(733);
+    BaseStats.setAtkPercent(24);
     std::vector<Character> buildsAtk(atkSandsRolls.size(),BaseStats);
     for(int i=0;i<buildsAtk.size();i++){
         //add artifact stats to base stats
-        buildsAtk[i].setCritDMG(0.01*atkSandsRolls[i][0]+.50);
-        buildsAtk[i].setTotalAttack(buildsAtk[i].getBaseAtk()*(1+(atkSandsRolls[i][1]*0.01)) +atkSandsRolls[i][4]+311);
+        buildsAtk[i].setCritDMG(0.01*atkSandsRolls[i][0]+buildsAtk[i].getCritDmg());
+        buildsAtk[i].setTotalAttack(buildsAtk[i].getBaseAtk()*(1+(atkSandsRolls[i][1]*0.01)+buildsAtk[i].getAtkPercent()) +atkSandsRolls[i][4]+311);
         buildsAtk[i].setEM(buildsAtk[i].getEM()+atkSandsRolls[i][2]);
         buildsAtk[i].setER(buildsAtk[i].getER()+atkSandsRolls[i][3]*0.01);
         buildsAtk[i].setDMGBonus(buildsAtk[i].getDMGBonus()+.466);
