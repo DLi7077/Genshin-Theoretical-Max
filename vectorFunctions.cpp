@@ -29,6 +29,3 @@ void displayNestedVector(std::vector<std::vector<double>> list){
         displayVector(list[i]);
     }
 }
-std::string vectortoString(std::vector<int>){
-    
-}

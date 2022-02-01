@@ -13,6 +13,15 @@ class Character{
 
         double SkillScaling=1;
         double BurstScaling=1;
+
+        double SkillBonus=0;
+        double BurstBonus=0;
+
+        double meltBonus=0;
+        
+        bool Emblem=false;
+        double EmblemBonus=0.25*EnergyRecharge;
+
     public:
         Character(std::string n){//default
             name=n;
@@ -74,6 +83,13 @@ class Character{
         void setBurst(double b){
             BurstScaling=b;
         }
+        void setEmblem(bool x){
+            Emblem=x;
+            BurstBonus+=EmblemBonus*0.01*int(Emblem);
+            //will add 0 if emblem if false
+            
+        }
+
 
         double getBaseAtk() const{
             return BaseAtk;
@@ -98,6 +114,18 @@ class Character{
         }
         double getAtkPercent() const{
             return AtkPercent;
+        }
+        double getSkill() const{
+            return SkillScaling;
+        }
+        double getBurst() const{
+            return BurstScaling;
+        }
+        double getSkillBonus() const{
+            return SkillBonus;
+        }
+        double getBurstBonus() const{
+            return BurstBonus;
         }
 
 
