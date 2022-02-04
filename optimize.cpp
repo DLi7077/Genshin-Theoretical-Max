@@ -98,7 +98,7 @@ int main(){
         buildsAtk[i].setCritDMG(0.01*atkSandsRolls[i][0]+buildsAtk[i].getCritDmg());
         buildsAtk[i].setTotalAttack(buildsAtk[i].getBaseAtk()*(1+(atkSandsRolls[i][1]*0.01)+buildsAtk[i].getAtkPercent()) +atkSandsRolls[i][4]+311);
         buildsAtk[i].setEM(buildsAtk[i].getEM()+atkSandsRolls[i][2]);
-        buildsAtk[i].setER(buildsAtk[i].getER()+atkSandsRolls[i][3]*0.01);
+        buildsAtk[i].setER(buildsAtk[i].getER()+(20+atkSandsRolls[i][3])*0.01);//20 from emblem
         buildsAtk[i].setDMGBonus(buildsAtk[i].getDMGBonus()+.466);
         
         outfile<<90<<","<<buildsAtk[i].getBaseAtk()<<","<<buildsAtk[i].getTotalAtk()<<","
