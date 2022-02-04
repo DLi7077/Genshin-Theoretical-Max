@@ -91,7 +91,7 @@ int main(){
     BaseStats.setSkill(366);
     BaseStats.setBurst(302.6);
 
-    BaseStats.setAtkPercent(24);
+    BaseStats.setAtkPercent(24+41.3);
     std::vector<Character> buildsAtk(atkSandsRolls.size(),BaseStats);
     for(int i=0;i<buildsAtk.size();i++){
         //add artifact stats to base stats
@@ -101,9 +101,9 @@ int main(){
         buildsAtk[i].setER(buildsAtk[i].getER()+atkSandsRolls[i][3]*0.01);
         buildsAtk[i].setDMGBonus(buildsAtk[i].getDMGBonus()+.466);
         
-        outfile<<90<<", "<<buildsAtk[i].getBaseAtk()<<", "<<buildsAtk[i].getTotalAtk()<<", "
-        <<buildsAtk[i].getEM()<<", "<<buildsAtk[i].getER()*100<<", "<<5<<", "<<buildsAtk[i].getCritDmg()*100
-        <<", "<<buildsAtk[i].getDMGBonus()*100<<", "<<buildsAtk[i].getSkill()<<", "<<buildsAtk[i].getBurst()<<"\n";
+        outfile<<90<<","<<buildsAtk[i].getBaseAtk()<<","<<buildsAtk[i].getTotalAtk()<<","
+        <<buildsAtk[i].getEM()<<","<<buildsAtk[i].getER()*100<<","<<5<<","<<buildsAtk[i].getCritDmg()*100
+        <<","<<buildsAtk[i].getDMGBonus()*100<<","<<buildsAtk[i].getSkill()<<","<<buildsAtk[i].getBurst()<<"\n";
     }
 
     // Character optimal= Character("Chongyun");
