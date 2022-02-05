@@ -18,19 +18,24 @@
  * post all permutations to the given csv file
  * 
  */
-void fillCSV(std::ofstream &file, Character BaseStats, const std::vector<std::vector<double>> &substats){
+void fillCSV(std::ofstream &file, const Character &BaseStats, const std::vector<std::vector<double>> &substats){
     std::vector<Character> build(substats.size(),BaseStats);
+    std::map<std::vector<double>,int> freq;//check for character dupes
     for(int i=0;i<build.size();i++){
-        //add artifact stats to base stats
-        build[i].setCritDMG(0.01*substats[i][0]+build[i].getCritDmg());
-        build[i].setTotalAttack(build[i].getBaseAtk()*(1+(substats[i][1]*0.01)+build[i].getAtkPercent()) +substats[i][4]+311);
-        build[i].setEM(build[i].getEM()+substats[i][2]);
-        build[i].setER(build[i].getER()+(20+substats[i][3])*0.01);//20 from emblem
-        build[i].setDMGBonus(build[i].getDMGBonus()+.466);
+        
+        if(freq[substats[i]]==0){
+            //add artifact stats to base stats
+            build[i].setCritDMG(0.01*substats[i][0]+build[i].getCritDmg());
+            build[i].setTotalAttack(build[i].getBaseAtk()*(1+(substats[i][1]*0.01)+build[i].getAtkPercent()) +substats[i][4]);
+            build[i].setEM(build[i].getEM()+substats[i][2]);
+            build[i].setER(build[i].getER()+(20+substats[i][3])*0.01);//20 from emblem
+            build[i].setDMGBonus(build[i].getDMGBonus()+.466);
 
-        file<<90<<","<<build[i].getBaseAtk()<<","<<build[i].getTotalAtk()<<","
-        <<build[i].getEM()<<","<<build[i].getER()*100<<","<<5<<","<<build[i].getCritDmg()*100
-        <<","<<build[i].getDMGBonus()*100<<","<<build[i].getSkill()<<","<<build[i].getBurst()<<"\n";
+            file<<90<<","<<build[i].getBaseAtk()<<","<<build[i].getTotalAtk()<<","
+            <<build[i].getEM()<<","<<build[i].getER()*100<<","<<5<<","<<build[i].getCritDmg()*100
+            <<","<<build[i].getDMGBonus()*100<<","<<build[i].getSkill()<<","<<build[i].getBurst()<<"\n";
+            freq[substats[i]]++;
+        }
 
     }
 }
@@ -56,10 +61,10 @@ int main(){
     //testing best artifact distribution with 4 emblem build
 
     //generated stats for flower, feather, and goblet
-    std::vector<std::vector<double>> MainPieces=getPossibilities(generateDistributions(4,15,3),substats,4,0);
-    displayNestedVector(MainPieces);
-    return 0;
-    //all possible substat distributions FOR FLOWER FEATHER GOBLET ONLY
+    std::vector<std::vector<double>> MainPieces=getPossibilities(generateDistributions(4,15,3),substats,4,311);
+    MainPieces=removeDuplicateVectors(MainPieces);
+    // //all possible substat distributions FOR FLOWER FEATHER GOBLET ONLY
+
     //circlet piece
     std::vector<double> circlet(5,0);//main stat Crit Damage
     circlet[0]=5.83;    //atk%
@@ -70,20 +75,20 @@ int main(){
     //then for each copy, add circlet's values to it.
     std::vector<std::vector<double>> circletRolls=getPossibilities(generateDistributions(4,5),circlet,0,62.2);
     circletRolls=MergePossibilities(MainPieces,circletRolls);
-    // displayNestedVector(circletRolls);
+    // removeDuplicatePermutations(circletRolls);
 
     // create ATK% timepiece
+    std::vector<double> ATKtimepiece(5,0);
+    ATKtimepiece[0]=7.77;   //crit dmg
+    // ATKtimepiece[1]=5.83;   NOT USING ATTACK%, BUT ADD BACK AFTER CALCULATING
+    ATKtimepiece[1]=23.31;  //elemental mastery
+    ATKtimepiece[2]=6.48;   //energy recharge
+    ATKtimepiece[3]=19.45;  //flat atk
 
-    // std::vector<double> ATKtimepiece(5,0);
-    // ATKtimepiece[0]=7.77;   //crit dmg
-    // // ATKtimepiece[1]=5.83;   NOT USING ATTACK%, BUT ADD BACK AFTER CALCULATING
-    // ATKtimepiece[1]=23.31;  //elemental mastery
-    // ATKtimepiece[2]=6.48;   //energy recharge
-    // ATKtimepiece[3]=19.45;  //flat atk
-    // std::vector<std::vector<double>> atkSandsRolls=getPossibilities(generateDistributions(4,5),ATKtimepiece,1,0);
-    // atkSandsRolls=MergePossibilities(atkSandsRolls,circletRolls);
-    // std::sort(atkSandsRolls.begin(),atkSandsRolls.end());
-    
+    std::vector<std::vector<double>> atkSandsRolls=getPossibilities(generateDistributions(4,5),ATKtimepiece,1,46.6);
+    atkSandsRolls=MergePossibilities(atkSandsRolls,circletRolls);
+    std::sort(atkSandsRolls.begin(),atkSandsRolls.end());
+
     // create EM timepiece
     std::vector<double> EMtimepiece(5,0);
     EMtimepiece[0]=7.77;   //crit dmg
@@ -91,23 +96,21 @@ int main(){
     // EMtimepiece[2]=23.31;  NOT USING EM, add to "getPossibilities" function call instead
     EMtimepiece[2]=6.48;   //energy recharge
     EMtimepiece[3]=19.45;  //flat atk
+
     std::vector<std::vector<double>> EMSandsRolls=getPossibilities(generateDistributions(4,5),EMtimepiece,2,187);
     EMSandsRolls=MergePossibilities(EMSandsRolls,circletRolls);
     std::sort(EMSandsRolls.begin(),EMSandsRolls.end());
-    displayNestedVector(EMSandsRolls);
-
-    return 0;
     
-    
-    // std::vector<double> ERtimepiece(5,0);
-    // ERtimepiece[0]=7.77;   //crit dmg
-    // EMtimepiece[1]=5.83;   //atk%
-    // ERtimepiece[2]=23.31;  //elemental mastery
-    // // ERtimepiece[3]=6.48;   NOT USING ER, add to function call instead
-    // ERtimepiece[3]=19.45;  //flat atk
-    // std::vector<std::vector<double>> ERSandsRolls=getPossibilities(generateDistributions(4,5),ERtimepiece,3,46.6);
-    // ERSandsRolls=MergePossibilities(ERSandsRolls,circletRolls);
-    // std::sort(ERSandsRolls.begin(),ERSandsRolls.end());
+    //create ER timepiece
+    std::vector<double> ERtimepiece(5,0);
+    ERtimepiece[0]=7.77;   //crit dmg
+    ERtimepiece[1]=5.83;   //atk%
+    ERtimepiece[2]=23.31;  //elemental mastery
+    // ERtimepiece[3]=6.48;   NOT USING ER, add to function call instead
+    ERtimepiece[3]=19.45;  //flat atk
+    std::vector<std::vector<double>> ERSandsRolls=getPossibilities(generateDistributions(4,5),ERtimepiece,3,51.8);
+    ERSandsRolls=MergePossibilities(ERSandsRolls,circletRolls);
+    std::sort(ERSandsRolls.begin(),ERSandsRolls.end());
 
     /*
     reference:
@@ -126,10 +129,10 @@ int main(){
     BaseStats.setSkill(366);
     BaseStats.setBurst(302.6);
 
-    BaseStats.setAtkPercent(24+41.3);
-    // fillCSV(atkStats,BaseStats,atkSandsRolls);
+    BaseStats.setAtkPercent(24+41.3);//from level up and weapon
+    fillCSV(atkStats,BaseStats,atkSandsRolls);
     fillCSV(emStats,BaseStats,EMSandsRolls);
-    // fillCSV(erStats,BaseStats,ERSandsRolls);
+    fillCSV(erStats,BaseStats,ERSandsRolls);
 
     // Character optimal= Character("Chongyun");
     // double 

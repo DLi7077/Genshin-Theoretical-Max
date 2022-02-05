@@ -1,9 +1,11 @@
 #include <vector>
-#include <map>
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
 #include "vectorFunctions.cpp"
+#include <bits/stdc++.h>
+#include <set>
+#include <string>
 /**
  * @brief given a list of integers, return a list of lists that contains all possible permutations of that list
  * 
@@ -18,6 +20,19 @@
                     take 4->[2,4]->[2]->4,2 ->3,4,2 ->1,3,4,2
                     .......         ^base case if size=1, return that partList as a list
 */
+std::string vectorToString(std::vector<double> vec){
+    std::ostringstream vts;
+    if (!vec.empty())
+    {
+    // Convert all but the last element to avoid a trailing ","
+    std::copy(vec.begin(), vec.end()-1,
+        std::ostream_iterator<int>(vts, ", "));
+  
+    // Now add the last element with no delimiter
+    vts << vec.back();
+    }
+    return vts.str();
+}
 void removeDuplicatePermutations(std::vector<std::vector<double>> &list){
     //sort each element
     for(int i=0;i<list.size();i++){
@@ -30,9 +45,21 @@ void removeDuplicatePermutations(std::vector<std::vector<double>> &list){
     for(int i=1;i<list.size();i++){
         if(list[i]==list[i-1]){
             list.erase(list.begin()+i);
-            i--;
+            i++;
         }
     }
+}
+std::vector<std::vector<double>> removeDuplicateVectors(const std::vector<std::vector<double>> &list){
+    std::vector<std::vector<double>> noDupes;
+    std::map<std::string,int> uniques;
+    for(int i=0;i<list.size();i++){
+        std::string toAdd=vectorToString(list[i]);
+        if(uniques[toAdd]==0){
+            noDupes.push_back(list[i]);
+            uniques[toAdd]=1;
+        }
+    }
+    return noDupes;
 }
 
 std::vector<std::vector<double>>permuations(const std::vector<double> &list){
@@ -161,9 +188,10 @@ std::vector<std::vector<double>> getPossibilities(const std::vector<std::vector<
     std::vector<std::vector<double>> TotalPossibilities;
     for(int i=0;i<distributions.size();i++){//for every base distribution
         std::vector<std::vector<double>> list=UniquePermutations(distributions[i]);//create permutations
-        for(int x=0;x<list.size();x++){
+
+        for(int x=0;x<list.size();x++){//for each permu
             for(int s=0;s<list[x].size();s++){
-                list[x][s]*=substats[s];
+                list[x][s]*=substats[s];//convert rolls to stats
             }
             if(list.size()==0){
                 throw "List is empty!\n";
@@ -189,22 +217,29 @@ std::vector<std::vector<double>> getPossibilities(const std::vector<std::vector<
  * @param ignore size 5
  * @return std::vector<std::vector<double>> 
  */
-std::vector<std::vector<double>> MergePossibilities(const std::vector<std::vector<double>> &part1, const std::vector<std::vector<double>> &part2){
-    std::map<std::vector<double>,int> dups;//use hashmap to catch duplicates
-    std::vector<std::vector<double>> merge;
-    for(int t=0;t<part2.size();t++){
-        std::vector<std::vector<double>> hold(part1.begin(),part1.end());
-        for(int i=0;i<part1.size();i++){//for every list in part1 (part1[i] is an unique artifact disrtibution)
-            for(int s=0;s<hold[i].size();s++){//traverse thru the substat values
-                hold[i][s]+=part2[t][s];//part2 is smaller, out of bounds error. use t
+std::vector<std::vector<double>> MergePossibilities(std::vector<std::vector<double>> part1, std::vector<std::vector<double>> part2){
+    std::vector<std::vector<double>> merged;
+    std::map<std::string,int> uniques;
+    for(int p2=0;p2<part2.size();p2++){//for every vector in part 2
+        for(int p1=0;p1<part1.size();p1++){
+            std::vector<double> copy=part1[p1];//get part1's vector
+            //add with part 2
+            for(int i=0;i<copy.size();i++){
+                copy[i]+=part2[p2][i];//add corresponding stats
             }
-            if(dups[hold[i]]==0){
-                merge.push_back(hold[i]);//add to merge
+            //done adding
+            std::string toAdd=vectorToString(copy);
+            if(uniques[toAdd]==0){
+                merged.push_back(copy);
+                uniques[toAdd]=1;
             }
-            dups[hold[i]]++;
+            // else{
+            //     std::cout<<"caught dupe-----";
+            //     displayVector(copy);
+            // }
         }
     }
-    return merge;
+    return merged;
 }
 
 
