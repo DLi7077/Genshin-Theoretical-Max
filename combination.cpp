@@ -19,7 +19,7 @@
 */
 //global variable
 std::vector<std::vector<int>> result;
-void helper(int start, std::vector<int> addTo,int n, int k){
+void helper(int start,std::vector<int> &addTo,int n, int k){
     if(addTo.size()==k){//no more to add
         result.push_back(addTo);//add to our global list
     } 

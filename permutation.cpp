@@ -35,7 +35,7 @@ void removeDuplicatePermutations(std::vector<std::vector<double>> &list){
     }
 }
 
-std::vector<std::vector<double>>permuations(std::vector<double> list){
+std::vector<std::vector<double>>permuations(const std::vector<double> &list){
     if(list.size()<=1) return {list};
 
     std::vector<std::vector<double>> results;
@@ -63,7 +63,7 @@ std::vector<std::vector<double>>permuations(std::vector<double> list){
  * same as before, just with hashmap
  * @param list 
  */
-std::vector<std::vector<double>>UniquePermutations(std::vector<double> list){
+std::vector<std::vector<double>>UniquePermutations(const std::vector<double> &list){
     if(list.size()<2) return {list};
 
     std::vector<std::vector<double>> results;
@@ -121,7 +121,7 @@ std::vector<std::vector<double>> distributions;
  * TIME COMPLEXITY: O(substat * rolls)~= O(n^2)
  * MEMORY: O(n^2)
  */
-void singleDistribution(int rollsToAdd, int rollsLeft, int idx, std::vector<double> list){
+void singleDistribution(int rollsToAdd, int rollsLeft, int idx, const std::vector<double> &list){
     std::vector<double> artifact(list.begin(),list.end());
     
     if(rollsToAdd<1||idx>=list.size()||rollsLeft<1){//end cases
@@ -157,7 +157,7 @@ std::vector<std::vector<double>> generateDistributions(int substat, int rolls,in
  * @param Editindex tells us the index to place the EditValue for every sub vector
  * @return std::vector<std::vector<double>> totalPossibilities
  */
-std::vector<std::vector<double>> getPossibilities(std::vector<std::vector<double>> distribution,std::vector<double> substats,int EditIndex=-1, double EditValue=-1){
+std::vector<std::vector<double>> getPossibilities(const std::vector<std::vector<double>> &distribution,const std::vector<double> &substats,int EditIndex=-1, double EditValue=-1){
     std::vector<std::vector<double>> TotalPossibilities;
     for(int i=0;i<distributions.size();i++){//for every base distribution
         std::vector<std::vector<double>> list=UniquePermutations(distributions[i]);//create permutations
@@ -189,7 +189,7 @@ std::vector<std::vector<double>> getPossibilities(std::vector<std::vector<double
  * @param ignore size 5
  * @return std::vector<std::vector<double>> 
  */
-std::vector<std::vector<double>> MergePossibilities(std::vector<std::vector<double>> part1, std::vector<std::vector<double>>part2){
+std::vector<std::vector<double>> MergePossibilities(const std::vector<std::vector<double>> &part1, const std::vector<std::vector<double>> &part2){
     std::map<std::vector<double>,int> dups;//use hashmap to catch duplicates
     std::vector<std::vector<double>> merge;
     for(int t=0;t<part2.size();t++){
@@ -215,7 +215,7 @@ std::vector<std::vector<double>> MergePossibilities(std::vector<std::vector<doub
 /*SAME FUNCTIONS FOR INTEGER VECTORS
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------*/
-std::vector<std::vector<int>>permuations(std::vector<int> list){
+std::vector<std::vector<int>>permuations(const std::vector<int> &list){
     if(list.size()<=1) return {list};
 
     std::vector<std::vector<int>> results;
@@ -237,7 +237,7 @@ std::vector<std::vector<int>>permuations(std::vector<int> list){
     }
     return results;
 }
-std::vector<std::vector<int>>UniquePermutations(std::vector<int> list){
+std::vector<std::vector<int>>UniquePermutations(const std::vector<int> &list){
     if(list.size()<2) return {list};
 
     std::vector<std::vector<int>> results;
