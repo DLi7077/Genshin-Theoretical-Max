@@ -20,22 +20,22 @@
  */
 void fillCSV(std::ofstream &file, const Character &BaseStats, const std::vector<std::vector<double>> &substats){
     std::vector<Character> build(substats.size(),BaseStats);
-    std::map<std::vector<double>,int> freq;//check for character dupes
-    for(int i=0;i<build.size();i++){
+    for(int i=0;i<substats.size();i++){
         
-        if(freq[substats[i]]==0){
-            //add artifact stats to base stats
-            build[i].setCritDMG(0.01*substats[i][0]+build[i].getCritDmg());
-            build[i].setTotalAttack(build[i].getBaseAtk()*(1+(substats[i][1]*0.01)+build[i].getAtkPercent()) +substats[i][4]);
-            build[i].setEM(build[i].getEM()+substats[i][2]);
-            build[i].setER(build[i].getER()+(20+substats[i][3])*0.01);//20 from emblem
-            build[i].setDMGBonus(build[i].getDMGBonus()+.466);
+        // //add artifact stats to base stats
+        // build[i].setCritDMG(0.01*substats[i][0]+build[i].getCritDmg());
+        // build[i].setTotalAttack(build[i].getBaseAtk()*(1+(substats[i][1]*0.01)+build[i].getAtkPercent()) +substats[i][4]);
+        // build[i].setEM(build[i].getEM()+substats[i][2]);
+        // build[i].setER(build[i].getER()+(20+substats[i][3])*0.01);//20 from emblem
+        // build[i].setDMGBonus(build[i].getDMGBonus()+.466);
 
-            file<<90<<","<<build[i].getBaseAtk()<<","<<build[i].getTotalAtk()<<","
-            <<build[i].getEM()<<","<<build[i].getER()*100<<","<<5<<","<<build[i].getCritDmg()*100
-            <<","<<build[i].getDMGBonus()*100<<","<<build[i].getSkill()<<","<<build[i].getBurst()<<"\n";
-            freq[substats[i]]++;
-        }
+        // file<<90<<","<<build[i].getBaseAtk()<<","<<build[i].getTotalAtk()<<","
+        // <<build[i].getEM()<<","<<build[i].getER()*100<<","<<5<<","<<build[i].getCritDmg()*100
+        // <<","<<build[i].getDMGBonus()*100<<","<<build[i].getSkill()<<","<<build[i].getBurst()<<"\n";
+        // freq[substats[i]]++;
+
+        file<<90<<","<<substats[i][0]<<","<<substats[i][1]<<","
+        <<substats[i][2]<<","<<substats[i][3]<<","<<5<<","<<substats[i][4]<<"\n";
 
     }
 }
