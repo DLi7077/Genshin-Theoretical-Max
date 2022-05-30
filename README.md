@@ -6,3 +6,5 @@
 
 ## Created a recursive generateDistributions Function:
 - returns all ways one could distribute 5 stones amongst 4 bowls 
+
+### warning: it probably doesn't scale well
